@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <title>Dashboard</title>
+</head>
+<body>
+    <section id="sidebar">
+        <a href="#" class="brand">
+            <img src="img/anhtruong.png" width="45" height="45">
+            <span class="text">SMART IOT</span>
+        </a>
+        <ul class="side-menu top">
+            <li class="active">
+                <a href="index.html">
+                    <i class='bx bxs-dashboard'></i>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="setting.html" id="settingsLink">
+                    <i class='bx bxs-cog'></i>
+                    <span class="text">Settings</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+
+    <section id="content">
+        <nav>
+            <i class='bx bx-menu'></i>
+            <div id="real-time-clock" class="real-time-clock"></div>
+            <form action="#">
+                <div class="form-input">
+                    <button type="submit"></button>
+                </div>
+            </form>
+            <input type="checkbox" id="switch-mode" hidden>
+            <label for="switch-mode" class="switch-mode"></label>
+            <a href="#" class="notification"></a>
+        </nav>
+ 
+        <main>
+            <div class="head-title">
+                <div class="left">
+                    <h1>SMART IOT</h1>
+                    <h3>Dashboard</h3>
+                </div>
+            </div>
+
+            <ul class="box-info">
+                <li>
+                    <i class='bx bx bxs-hot'></i>
+                    <span class="text">
+                        <h3>Khí gas</h3>
+                        <p><span id="Khigas">--</span></p>
+                    </span>
+                </li>
+                <li>
+                    <i class='bx bxs-thermometer'></i>
+                    <span class="text">
+                        <h3>Nhiệt độ</h3>
+                        <p><span id="nhietdo">--</span></p>
+                    </span>
+                </li>
+                <li>
+                    <i class='bx bxs-droplet'></i>
+                    <span class="text">
+                        <h3>Độ ẩm</h3>
+                        <p><span id="doam">--</span></p>
+                    </span>
+                </li>
+            </ul>
+
+            <div class="table-data">
+                <div class="order">
+                    <div class="head">
+                        <h3>Bảng dữ liệu</h3>
+                    </div>
+                    <div class="data-container">
+                        <h2>Nhiệt độ: <span id="nhietdoDisplay">--</span>°C | Độ ẩm: <span id="doamDisplay">--</span>% | Khí gas: <span id="khigasDisplay">--</span> ppm</h2>
+                        <table id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Nhiệt Độ (°C)</th>
+                                    <th>Độ Ẩm (%)</th>
+                                    <th>Khí gas (ppm)</th>
+                                    <th>Thời Gian</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                        <div class="btn_trang2">
+                            <button id="downloadPDF" class="btn waves-effect waves-light">Tải PDF</button>
+                        </div>
+                        <div class="clear_storage">
+                            <button id="CLEAR_STORAGE" class="btn waves-effect waves-light">CLEAR</button>
+                        </div>                        
+                    </div>
+                </div>
+
+                <div class="todo">
+                    <div class="container">
+                        <div class="square-box">
+                            <div class="image-container">
+                                <div class="control-container">
+                                    <div class="device-status">
+                                        <img id="buzzer" src="img/bell.png" class="lamp" alt="Còi">
+                                        <span id="buzzerStatus"></span>
+                                    </div>
+                                    <div class="device-status">
+                                        <img id="door" src="img/cua_dong.png" class="lamp" alt="Cửa">
+                                        <span id="doorStatus"></span>
+                                    </div>
+                                    <div class="device-status">
+                                        <img id="fan" src="img/fan_off.png" class="lamp" alt="Quạt">
+                                        <span id="fanStatus"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bottom">
+                            <button type="button" id="btn1" class="btn waves-effect waves-light">Bật Còi</button>
+                            <button type="button" id="btn2" class="btn waves-effect waves-light">Tắt Còi</button>
+                            <button type="button" id="btn3" class="btn waves-effect waves-light">Mở Cửa</button>
+                            <button type="button" id="btn4" class="btn waves-effect waves-light">Đóng Cửa</button>
+                            <button type="button" id="btn5" class="btn waves-effect waves-light">Bật Quạt</button>
+                            <button type="button" id="btn6" class="btn waves-effect waves-light">Tắt Quạt</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </section>
+    <script src="script.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-analytics.js"></script>
+    <div class="bot">
+        <script>
+            const firebaseConfig = {
+                apiKey: "AIzaSyClayDd1n7OcCkqZ6iOwdtD_m7OLRCnPDM",
+                authDomain: "stupid-city.firebaseapp.com",
+                databaseURL: "https://stupid-city-default-rtdb.firebaseio.com",
+                projectId: "stupid-city",
+                storageBucket: "stupid-city.firebasestorage.app",
+                messagingSenderId: "238299841414",
+                appId: "1:238299841414:web:9c4e1dcc3f1e9ab0952207",
+                measurementId: "G-C2T6EV0XTV"
+            };
+
+            firebase.initializeApp(firebaseConfig);
+            const database = firebase.database();
+
+            let dataList = JSON.parse(localStorage.getItem("dataList")) || [];
+            let autoMode = true;
+
+            function updateRealTimeClock() {
+                let time = new Date();
+                let gio = String(time.getHours()).padStart(2, '0');
+                let phut = String(time.getMinutes()).padStart(2, '0');
+                let giay = String(time.getSeconds()).padStart(2, '0');
+                document.getElementById("real-time-clock").innerText = `${gio}:${phut}:${giay}`;
+            }
+
+            function getCurrentTime() {
+                let time = new Date();
+                let gio = String(time.getHours()).padStart(2, '0');
+                let phut = String(time.getMinutes()).padStart(2, '0');
+                let giay = String(time.getSeconds()).padStart(2, '0');
+                return `${gio}:${phut}:${giay}`;
+            }
+
+            function saveState() {
+                const state = {
+                    nhietdo: document.getElementById("nhietdoDisplay").innerText,
+                    doam: document.getElementById("doamDisplay").innerText,
+                    khigas: document.getElementById("khigasDisplay").innerText,
+                    autoMode: autoMode,
+                    buzzer: document.getElementById("buzzer").src.includes("buzzer.png"),
+                    door: document.getElementById("door").src.includes("cua_mo.png"),
+                    fan: document.getElementById("fan").src.includes("fan_on.png"),
+                    darkMode: document.getElementById("switch-mode").checked
+                };
+                localStorage.setItem("iotState", JSON.stringify(state));
+            }
+
+            function restoreState() {
+                const state = JSON.parse(localStorage.getItem("iotState"));
+                if (state) {
+                    // Restore sensor values
+                    if (state.nhietdo && state.nhietdo !== "--") {
+                        document.getElementById("nhietdo").innerText = state.nhietdo + " °C";
+                        document.getElementById("nhietdoDisplay").innerText = state.nhietdo;
+                    }
+                    if (state.doam && state.doam !== "--") {
+                        document.getElementById("doam").innerText = state.doam + " %";
+                        document.getElementById("doamDisplay").innerText = state.doam;
+                    }
+                    if (state.khigas && state.khigas !== "--") {
+                        document.getElementById("Khigas").innerText = state.khigas + " ppm";
+                        document.getElementById("khigasDisplay").innerText = state.khigas;
+                    }
+
+                    autoMode = state.autoMode !== undefined ? state.autoMode : true;
+                    toggleControlButtons(!autoMode);
+
+                    if (state.buzzer !== undefined) {
+                        document.getElementById("buzzer").src = state.buzzer ? "img/buzzer.png" : "img/bell.png";
+                        document.getElementById("buzzerStatus").innerText = "";
+                    }
+                    if (state.door !== undefined) {
+                        document.getElementById("door").src = state.door ? "img/cua_mo.png" : "img/cua_dong.png";
+                        document.getElementById("doorStatus").innerText = "";
+                    }
+                    if (state.fan !== undefined) {
+                        document.getElementById("fan").src = state.fan ? "img/fan_on.png" : "img/fan_off.png";
+                        document.getElementById("fanStatus").innerText = "";
+                    }
+
+                    if (state.darkMode !== undefined) {
+                        document.getElementById("switch-mode").checked = state.darkMode;
+                        if (state.darkMode) {
+                            document.body.classList.add("dark-mode");
+                        } else {
+                            document.body.classList.remove("dark-mode");
+                        }
+                    }
+                }
+            }
+
+            function getFirebaseData() {
+                const tempRef = database.ref("/sensor/temperature");
+                const humiRef = database.ref("/sensor/humidity");
+                const gasRef = database.ref("/sensor/gas");
+
+                tempRef.on("value", (snapshot) => {
+                    let nhietdo = snapshot.val();
+                    if (nhietdo !== null && !isNaN(nhietdo)) {
+                        document.getElementById("nhietdo").innerText = nhietdo + " °C";
+                        document.getElementById("nhietdoDisplay").innerText = nhietdo;
+                    } else {
+                        document.getElementById("nhietdo").innerText = "No Data";
+                        document.getElementById("nhietdoDisplay").innerText = "--";
+                    }
+                }, (error) => {
+                    console.error("Error fetching temperature:", error);
+                });
+
+                humiRef.on("value", (snapshot) => {
+                    let doam = snapshot.val();
+                    if (doam !== null && !isNaN(doam)) {
+                        document.getElementById("doam").innerText = doam + " %";
+                        document.getElementById("doamDisplay").innerText = doam;
+                    } else {
+                        document.getElementById("doam").innerText = "No Data";
+                        document.getElementById("doamDisplay").innerText = "--";
+                    }
+                }, (error) => {
+                    console.error("Error fetching humidity:", error);
+                });
+
+                gasRef.on("value", (snapshot) => {
+                    let gas = snapshot.val();
+                    if (gas !== null && !isNaN(gas)) {
+                        document.getElementById("Khigas").innerText = gas + " ppm";
+                        document.getElementById("khigasDisplay").innerText = gas;
+                    } else {
+                        document.getElementById("Khigas").innerText = "No Data";
+                        document.getElementById("khigasDisplay").innerText = "--";
+                    }
+                }, (error) => {
+                    console.error("Error fetching gas:", error);
+                });
+            }
+
+            function syncDeviceStates() {
+                database.ref("/setting/auto_mode").on("value", (snapshot) => {
+                    autoMode = snapshot.val() !== null ? snapshot.val() : true;
+                    console.log("Auto mode:", autoMode);
+                    toggleControlButtons(!autoMode);
+                });
+
+                database.ref("/control/fan").on("value", (snapshot) => {
+                    let fanState = snapshot.val();
+                    document.getElementById("fan").src = fanState ? "img/fan_on.png" : "img/fan_off.png";
+                    document.getElementById("fanStatus").innerText = fanState ? "" : "";
+                    console.log("Fan state:", fanState);
+                });
+
+                database.ref("/control/buzzer").on("value", (snapshot) => {
+                    let buzzerState = snapshot.val();
+                    document.getElementById("buzzer").src = buzzerState ? "img/buzzer.png" : "img/bell.png";
+                    document.getElementById("buzzerStatus").innerText = buzzerState ? "" : "";
+                    console.log("Buzzer state:", buzzerState);
+                });
+
+                database.ref("/control/door").on("value", (snapshot) => {
+                    let doorState = snapshot.val();
+                    document.getElementById("door").src = doorState ? "img/cua_mo.png" : "img/cua_dong.png";
+                    document.getElementById("doorStatus").innerText = doorState ? "" : "";
+                    console.log("Door state:", doorState);
+                });
+            }
+
+            function toggleControlButtons(enabled) {
+                const buttons = ["btn1", "btn2", "btn3", "btn4", "btn5", "btn6"];
+                buttons.forEach(id => {
+                    document.getElementById(id).disabled = !enabled;
+                    document.getElementById(id).style.opacity = enabled ? "1" : "0.5";
+                });
+            }
+
+            function controlDevice(device, state) {
+                if (!autoMode) {
+                    database.ref(`/control/${device}`).set(state, (error) => {
+                        if (error) {
+                            console.error(`Error setting ${device} to ${state}:`, error);
+                            alert(`Lỗi khi điều khiển ${device}!`);
+                        } else {
+                            console.log(`${device} set to ${state}`);
+                        }
+                    });
+                } else {
+                    alert("Không thể điều khiển thiết bị ở chế độ Auto!");
+                }
+            }
+
+            function saveDataWithSensors() {
+                Promise.all([
+                    database.ref("/sensor/humidity").once("value"),
+                    database.ref("/sensor/temperature").once("value"),
+                    database.ref("/sensor/gas").once("value"),
+                ]).then(([humiSnapshot, tempSnapshot, gasSnapshot]) => {
+                    let doam = humiSnapshot.val();
+                    let nhietdo = tempSnapshot.val();
+                    let khigas = gasSnapshot.val();
+                    addRow(nhietdo, doam, khigas);
+                }).catch((error) => {
+                    console.error("Error saving sensor data:", error);
+                });
+            }
+
+            function loadData() {
+                let table = document.getElementById("dataTable").getElementsByTagName('tbody')[0];
+                table.innerHTML = "";
+
+                dataList.forEach((data, index) => {
+                    let newRow = table.insertRow();
+                    let cell1 = newRow.insertCell(0);
+                    let cell2 = newRow.insertCell(1);
+                    let cell3 = newRow.insertCell(2);
+                    let cell4 = newRow.insertCell(3);
+                    let cell5 = newRow.insertCell(4);
+
+                    cell1.innerHTML = index + 1;
+                    cell2.innerHTML = data.nhietdo;
+                    cell3.innerHTML = data.doam;
+                    cell4.innerHTML = data.khigas;
+                    cell5.innerHTML = data.time;
+                });
+            }
+
+            function addRow(nhietdo, doam, khigas) {
+                if (nhietdo == null || doam == null || khigas == null || 
+                    isNaN(nhietdo) || isNaN(doam) || isNaN(khigas)) {
+                    console.warn("Invalid sensor data, skipping row addition");
+                    return;
+                }
+
+                let table = document.getElementById("dataTable").getElementsByTagName('tbody')[0];
+                let currentTime = getCurrentTime();
+
+                dataList.push({ nhietdo, doam, khigas, time: currentTime });
+
+                if (dataList.length > 20) {
+                    dataList.shift(); 
+                }
+
+                localStorage.setItem("dataList", JSON.stringify(dataList));
+                loadData();
+            }
+
+            // nút điều khiển
+            document.getElementById("btn1").addEventListener("click", () => controlDevice("buzzer", true));
+            document.getElementById("btn2").addEventListener("click", () => controlDevice("buzzer", false));
+            document.getElementById("btn3").addEventListener("click", () => controlDevice("door", true));
+            document.getElementById("btn4").addEventListener("click", () => controlDevice("door", false));
+            document.getElementById("btn5").addEventListener("click", () => controlDevice("fan", true));
+            document.getElementById("btn6").addEventListener("click", () => controlDevice("fan", false));
+
+            // Tải PDF
+            document.getElementById("downloadPDF").addEventListener("click", function () {
+                let element = document.querySelector(".data-container");
+                html2pdf()
+                    .set({
+                        margin: 10,
+                        filename: 'SMART_IOT.pdf',
+                        image: { type: 'jpeg', quality: 0.98 },
+                        html2canvas: { scale: 2 },
+                        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                    })
+                    .from(element)
+                    .save();
+            });
+
+            // Xóa dữ liệu
+            document.getElementById("CLEAR_STORAGE").addEventListener("click", function () {
+                dataList = [];
+                localStorage.removeItem("dataList");
+                loadData();
+            });
+
+            //chuyển đổi dark mode
+            document.getElementById("switch-mode").addEventListener("change", function () {
+                if (this.checked) {
+                    document.body.classList.add("dark-mode");
+                } else {
+                    document.body.classList.remove("dark-mode");
+                }
+                saveState(); // Lưu trạng thái dark mode 
+            });
+
+            // Lưu trạng thái khi chuyển trang
+            document.getElementById("settingsLink").addEventListener("click", function (event) {
+                event.preventDefault(); 
+                saveState();
+                window.location.href = "setting.html"; // Chuyển trang sau khi lưu
+            });
+            // Lưu trạng thái khi rời trang 
+            window.addEventListener("beforeunload", saveState);
+
+            try {
+                restoreState(); // Khôi phục trạng thái khi tải trang
+                setInterval(updateRealTimeClock, 1000);
+                setInterval(saveDataWithSensors, 10000);
+                getFirebaseData();
+                syncDeviceStates();
+                loadData();
+            } catch (error) {
+                console.error("Error during initialization:", error);
+            }
+        </script>
+    </div>
+</body>
+</html>
